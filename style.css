@@ -1,0 +1,32 @@
+h1 {
+	color     : white;
+	text-align: center;
+}
+
+h2 {
+	color      : white;
+	text-align : left;
+	margin-left: 30px;
+}
+
+h3 {
+	color      : white;
+	text-align : left;
+}
+
+
+button {
+	text-align : left;
+	margin-left: 30px;
+}
+
+
+p {
+	color: white;
+}
+
+img {
+	text-align : left;
+	margin-left: 30px;
+}
+
