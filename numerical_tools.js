@@ -5,6 +5,10 @@
 d2r = Math.PI / 180.0;
 r2d = 180.0 / Math.PI;
 
+REFERENCE_FRAME_MAP = {
+	'IAU_EARTH': eci2ecef
+}
+
 function add( v0, v1 ) {
 	a = Array( v0.length );
 	for ( var n = 0; n < v0.length; n++ ) {
@@ -74,4 +78,38 @@ function Cz( a ) {
 		[ sa,  ca, 0 ],
 		[  0,   0, 1 ]
 	] )
+}
+
+function frame_transform( arrs, from, to, ets ) {
+	out  = Array( ets.length ).fill( Array( 3 ) );
+	func = REFERENCE_FRAME_MAP[ to ];
+	for ( var n = 0; n < ets.length; n++ ) {
+		out[ n ] = math.multiply(
+			func( ets[ n ] ), arrs[ n ] ).valueOf();
+	}
+	return out;
+}
+
+function eci2ecef( et ) {
+	return Cz( OMEGA_EARTH * et );
+}
+
+function reclat( r ) {
+	rnorm = norm( r );
+	return [
+		rnorm,
+		Math.atan2( r[ 1 ], r[ 0 ] ),
+		Math.asin( r[ 2 ] / rnorm )
+	]
+}
+
+function cart2lat( rs, from, to, ets ) {
+	rs_bf   = frame_transform( rs, from, to, ets );
+	latlons = Array( ets.length ).fill( Array( 3 ) );
+	for ( var n = 0; n < ets.length; n++ ) {
+		latlons[ n ]       = reclat( rs_bf[ n ].valueOf() );
+		latlons[ n ][ 1 ] *= r2d;
+		latlons[ n ][ 2 ] *= r2d;
+	}
+	return latlons;
 }

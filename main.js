@@ -2,12 +2,13 @@
 //
 document.getElementById( "propagate_button" ).addEventListener( "click", propagate_orbits );
 
-const N_STATE_VECTOR_INPUTS = 2;
-const N_COES_INPUTS         = 2;
-const N_TOTAL_ORBITS        = N_STATE_VECTOR_INPUTS + N_COES_INPUTS;
-const COLORS                = [ 'magenta', 'cyan', 'lime', 'red' ];
-const BASIS_VECTORS_SCALE   = 2.0;
-const MAX_VAL_SCALE         = 2.5;
+const N_STATE_VECTOR_INPUTS  = 2;
+const N_COES_INPUTS          = 2;
+const N_TOTAL_ORBITS         = N_STATE_VECTOR_INPUTS + N_COES_INPUTS;
+const COLORS                 = [ 'magenta', 'cyan', 'lime', 'red' ];
+const BASIS_VECTORS_SCALE    = 2.0;
+const MAX_VAL_SCALE          = 2.5;
+const GROUNDTRACK_MARKERSIZE = 2;
 
 function make_basis_vectors( radius ) {
 	return [
@@ -81,8 +82,20 @@ function make_trace( states, n, max_val ) {
 	}, max_val ];
 }
 
+function make_trace_gt( latlons, n ) {
+	return {
+		x     : latlons.map( function( a ) { return a[ 1 ] } ),
+		y     : latlons.map( function( a ) { return a[ 2 ] } ),
+		mode  : 'markers',
+		name  : 'Orbit' + n,
+		marker: { color: COLORS[ n ], size: GROUNDTRACK_MARKERSIZE },
+		type  : 'scatter',
+	};	
+}
+
 function propagate_orbits() {
 	let states_list  = [];
+	let latlons_list = [];
 	let traces       = [];
 	let max_val      = 0;
 	let n_orbit      = 0;
@@ -100,7 +113,14 @@ function propagate_orbits() {
 			state  = [ rx, ry, rz, vx, vy, vz ];
 			tspan  = state2period( state ) *
 				parseFloat( document.getElementById( "sim-time" + n ).value );
-			states_list.push( propagate_orbit( state, tspan, dt, MU ) );
+			states  = propagate_orbit( state, tspan, dt, MU )
+			ets_    = linspace( 0, tspan, Math.ceil( tspan / dt ) );
+			latlons = cart2lat( states.map(
+				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
+				'J2000', 'IAU_EARTH', ets_ );
+
+			states_list.push( states );
+			latlons_list.push( latlons )
 			idxs.push( n_orbit );
 		}
 		n_orbit++;
@@ -118,7 +138,14 @@ function propagate_orbits() {
 			state = coes2state( [ sma, ecc, inc * d2r, ta * d2r, aop * d2r, raan * d2r ] );
 			tspan = state2period( state.valueOf() ) *
 				parseFloat( document.getElementById( "sim-time-k" + n ).value );
-			states_list.push( propagate_orbit( state, tspan, dt, MU ) );
+			states  = propagate_orbit( state, tspan, dt, MU )
+			latlons = cart2lat( states.map(
+				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
+				'J2000', 'IAU_EARTH',
+				linspace( 0, tspan, tspan / dt ) );
+
+			states_list.push( states );
+			latlons_list.push( latlons )
 			idxs.push( n_orbit );
 		}
 		n_orbit++;
@@ -155,6 +182,42 @@ function propagate_orbits() {
 		}
 	};
 	Plotly.newPlot( 'plot-3d', traces, layout );
+
+	var layout_gt = {
+		title: 'Groundtracks',
+		xaxis: {
+			range    : [ -180, 180 ],
+			autorange: false,
+			tickmode : 'linear',
+			tick0    : -180,
+			dtick    : 30
+		},
+		yaxis: {
+			range    : [ -90,  90  ],
+			autorange: false,
+			tickmode : 'linear',
+			tick0    : -90,
+			dtick    : 30
+		},
+		plot_bgcolor : 'black',
+		paper_bgcolor: '#0000',
+		images       : [ {
+			source: 'https://raw.githubusercontent.com/alfonsogonzalez/pages-test/minimum-functionality/images/earth-surface-1024-512.jpeg',
+			xref  : 'x', yref: 'y',
+			x     : -180, y: 90,
+			sizex : 360, sizey: 180,
+			sizing: 'stretch',
+			layer : 'below'
+		} ]
+	};
+
+	var traces_gt = []
+	for( var n = 0; n < idxs.length; n++ ) {
+		traces_gt.push( make_trace_gt( latlons_list[ n ], idxs[ n ] ) );
+	}
+
+	Plotly.newPlot( 'plot-groundtracks', traces_gt, layout_gt );
+
 }
 
 propagate_orbits();

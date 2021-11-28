@@ -1,8 +1,9 @@
 
-const MU = 3.9860043543609598E+05;
+const MU          = 3.9860043543609598E+05;
+const OMEGA_EARTH = Math.PI / ( 12 * 3600 );
 
 function two_body_ode( t, y ) {
-	r = y.valueOf().slice( 0, 3 );
+	r = y.slice( 0, 3 );
 	a = scale( r, -MU / Math.pow( norm( r ), 3 ) );
 	return [ y[ 3 ], y[ 4 ], y[ 5 ], a[ 0 ], a[ 1 ], a[ 2 ] ];
 }
@@ -13,7 +14,7 @@ function propagate_orbit( state, tspan, dt, mu ) {
 	states[ 0 ] = state;
 
 	for ( var n = 1; n < n_steps; n++ ) {
-		states[ n ] = euler_step( two_body_ode, n, states[ n - 1 ], dt );
+		states[ n ] = rk4_step( two_body_ode, n, states[ n - 1 ], dt );
 	}
 	return states;
 }
