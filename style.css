@@ -19,23 +19,33 @@
 
 #plot-3d {
 	width   : 1500px;
-	height  : 1500px;
+	height  : 1000px;
 	position: absolute;
-	top     : 150px;
+	top     : -100px;
 	left    : 1000px;
 }
 
 #plot-groundtracks {
-	width   : 950px;
-	height  : 600px;
+	width   : 850px;
+	height  : 520px;
 	position: absolute;
-	top     : 450px;
-	left    : 5px;
+	top     : 315px;
+	left    : -2px;
+}
+
+#plot-positions-velocities {
+	width   : 750px;
+	height  : 450px;
+	position: absolute;
+	top     : 400px;
+	left    : 815px;
 }
 
 h1 {
 	color     : magenta;
 	text-align: center;
+	padding   : 0px;
+	margin    : 5px;
 }
 
 h2 {

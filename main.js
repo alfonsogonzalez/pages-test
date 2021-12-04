@@ -9,6 +9,7 @@ const COLORS                 = [ 'magenta', 'cyan', 'lime', 'red' ];
 const BASIS_VECTORS_SCALE    = 2.0;
 const MAX_VAL_SCALE          = 2.5;
 const GROUNDTRACK_MARKERSIZE = 2;
+const RV_LINEWIDTH           = 3;
 
 function make_basis_vectors( radius ) {
 	return [
@@ -93,9 +94,36 @@ function make_trace_gt( latlons, n ) {
 	};	
 }
 
+function make_trace_rv( ets, states, n ) {
+	rnorms = states.map( function ( a ) {
+		return norm( [ a[ 0 ], a[ 1 ], a[ 2 ] ] ) } );
+	vnorms = states.map( function ( a ) {
+		return norm( [ a[ 3 ], a[ 4 ], a[ 5 ] ] ) } );
+	ts     = ets.map( function ( a ) { return a / 3600.0 } );
+	return [ {
+		x    : ts,
+		y    : vnorms,
+		mode : 'lines',
+		name : 'Orbit' + n,
+		line : { color: COLORS[ n ], width: RV_LINEWIDTH },
+		type : 'scatter',
+		xaxis: 'x2',
+		yaxis: 'y2'
+	},
+	{
+		x   : ts,
+		y   : rnorms,
+		mode: 'lines',
+		name: 'Orbit' + n,
+		line: { color: COLORS[ n ], width: RV_LINEWIDTH },
+		type: 'scatter',
+	} ];	
+}
+
 function propagate_orbits() {
 	let states_list  = [];
 	let latlons_list = [];
+	let ets_list     = [];
 	let traces       = [];
 	let max_val      = 0;
 	let n_orbit      = 0;
@@ -114,13 +142,14 @@ function propagate_orbits() {
 			tspan  = state2period( state ) *
 				parseFloat( document.getElementById( "sim-time" + n ).value );
 			states  = propagate_orbit( state, tspan, dt, MU )
-			ets_    = linspace( 0, tspan, Math.ceil( tspan / dt ) );
+			ets     = linspace( 0, tspan, states.length );
 			latlons = cart2lat( states.map(
 				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
-				'J2000', 'IAU_EARTH', ets_ );
+				'J2000', 'IAU_EARTH', ets );
 
 			states_list.push( states );
-			latlons_list.push( latlons )
+			latlons_list.push( latlons );
+			ets_list.push( ets );
 			idxs.push( n_orbit );
 		}
 		n_orbit++;
@@ -139,13 +168,14 @@ function propagate_orbits() {
 			tspan = state2period( state.valueOf() ) *
 				parseFloat( document.getElementById( "sim-time-k" + n ).value );
 			states  = propagate_orbit( state, tspan, dt, MU )
+			ets     = linspace( 0, tspan, states.length );
 			latlons = cart2lat( states.map(
 				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
-				'J2000', 'IAU_EARTH',
-				linspace( 0, tspan, tspan / dt ) );
+				'J2000', 'IAU_EARTH', ets );
 
 			states_list.push( states );
-			latlons_list.push( latlons )
+			latlons_list.push( latlons );
+			ets_list.push( ets );
 			idxs.push( n_orbit );
 		}
 		n_orbit++;
@@ -166,7 +196,8 @@ function propagate_orbits() {
 	traces.push( basis_vectors[ 2 ] );
 
 	var layout = {
-	  title        : 'Orbits',
+	  title        : false,
+	  showlegend   : false,
 	  autosize     : false,
 	  width        : 500,
 	  height       : 500,
@@ -184,20 +215,22 @@ function propagate_orbits() {
 	Plotly.newPlot( 'plot-3d', traces, layout );
 
 	var layout_gt = {
-		title: 'Groundtracks',
+		title: false,
 		xaxis: {
 			range    : [ -180, 180 ],
 			autorange: false,
 			tickmode : 'linear',
 			tick0    : -180,
-			dtick    : 30
+			dtick    : 30,
+			title    : 'Longitude'
 		},
 		yaxis: {
 			range    : [ -90,  90  ],
 			autorange: false,
 			tickmode : 'linear',
 			tick0    : -90,
-			dtick    : 30
+			dtick    : 30,
+			title    : 'Latitude'
 		},
 		plot_bgcolor : 'black',
 		paper_bgcolor: '#0000',
@@ -208,15 +241,40 @@ function propagate_orbits() {
 			sizex : 360, sizey: 180,
 			sizing: 'stretch',
 			layer : 'below'
-		} ]
+		} ],
+		margin: { l: 50, r: 50, b: 50, t: 0, pad: 1 },
+		showlegend: false
 	};
 
 	var traces_gt = []
 	for( var n = 0; n < idxs.length; n++ ) {
 		traces_gt.push( make_trace_gt( latlons_list[ n ], idxs[ n ] ) );
 	}
-
 	Plotly.newPlot( 'plot-groundtracks', traces_gt, layout_gt );
+
+	var traces_rv = []
+	for( var n = 0; n < idxs.length; n++ ) {
+		traces = make_trace_rv( ets_list[ n ], states_list[ n ], idxs[ n ] );
+		traces_rv.push( traces[ 0 ] );
+		traces_rv.push( traces[ 1 ] );
+	}
+
+	var layout_rv = {
+		title        : false,
+		showlegend   : false,
+		plot_bgcolor : 'black',
+		paper_bgcolor: '#0000',
+		margin       : { l: 50, r: 50, b: 50, t: 50, pad: 1 },
+		grid         : {
+			rows: 2, columns: 1, pattern: 'independent', roworder: 'bottom to top'
+		},
+		xaxis1: { title: "Time (hours)", showgrid: true, gridcolor: 'white' },
+		xaxis2: { showgrid: true, gridcolor: 'white' },
+		yaxis1: { title: "Position (km)", showgrid: true, gridcolor: 'white' },
+		yaxis2: { title: "Velocity (km/s)", showgrid: true, gridcolor: 'white' },
+	};
+
+	Plotly.newPlot( 'plot-positions-velocities', traces_rv, layout_rv );
 
 }
 
