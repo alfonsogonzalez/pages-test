@@ -21,7 +21,7 @@
 	width   : 1500px;
 	height  : 1000px;
 	position: absolute;
-	top     : -100px;
+	top     : 0px;
 	left    : 1000px;
 }
 
@@ -93,10 +93,11 @@ label, input {
 #ta1l,  #aop1l, #raan1l,
 #sim-time-k1l,  #dt-k1l, #active-k1l { color: red; }
 
-button {
-	text-align : left;
+.buttons {
+	width  : 200px;
+	margin : 10px;
+	display: inline;
 }
-
 
 p {
 	color: white;

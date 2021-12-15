@@ -9,6 +9,8 @@ function two_body_ode( t, y ) {
 }
 
 function propagate_orbit( state, tspan, dt, mu ) {
+	console.log( state );
+	console.log( tspan );
 	n_steps     = Math.ceil( tspan / dt ) + 1;
 	states      = Array( n_steps ).fill( Array( 6 ) );
 	states[ 0 ] = state;

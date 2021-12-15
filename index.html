@@ -7,6 +7,7 @@
 	<script src="numerical_tools.js"></script>
 	<script src="orbit_tools.js"></script>
 	<script src="ode_tools.js"></script>
+	<script src="plotting_tools.js"></script>
 
 	<title>Astrodynamics Interactive Demo</title>
 	<link rel="icon" href="https://raw.githubusercontent.com/alfonsogonzalez/AWP/main/docs/cosmo-3d-launches.png" type="image/x-icon">
@@ -45,7 +46,7 @@
 	</div>
 	<div class="element-input">
 		<label id="dt0l" for="dt0">Time Step</label><br />
-		<input id="dt0" type="text" value="30"/>
+		<input id="dt0" type="text" value="60"/>
 	</div>
 	<div class="element-input">
 		<label id="active0l" for="active0">Active</label><br />
@@ -84,7 +85,7 @@
 	</div>
 	<div class="element-input">
 		<label id="dt1l" for="dt1">Time Step</label><br />
-		<input id="dt1" type="text" value="30"/>
+		<input id="dt1" type="text" value="60"/>
 	</div>
 	<div class="element-input">
 		<label id="active1l" for="active1">Active</label><br />
@@ -103,7 +104,7 @@
 	</div>
 	<div class="element-input">
 		<label id="inc0l" for="inc0">INC</label><br />
-		<input id="inc0" type="text" value="30.0"/>
+		<input id="inc0" type="text" value="60.0"/>
 	</div>
 	<div class="element-input">
 		<label id="ta0l" for="ta0">TA (&#952)</label><br />
@@ -123,7 +124,7 @@
 	</div>
 	<div class="element-input">
 		<label id="dt-k0l" for="dt-k0">Time Step</label><br />
-		<input id="dt-k0" type="text" value="30"/>
+		<input id="dt-k0" type="text" value="60"/>
 	</div>
 	<div class="element-input">
 		<label id="active-k0l" for="active-k0">Active</label><br />
@@ -162,7 +163,7 @@
 	</div>
 	<div class="element-input">
 		<label id="dt-k1l" for="dt-k1">Time Step</label><br />
-		<input id="dt-k1" type="text" value="30"/>
+		<input id="dt-k1" type="text" value="60"/>
 	</div>
 	<div class="element-input">
 		<label id="active-k1l" for="active-k1">Active</label><br />
@@ -171,6 +172,7 @@
 
 	<br><br>
 	<button id="propagate_button" type="submit">Propagate Orbits!</button>
+	<button id="animate_button" type="submit">Animate Orbits!</button>
 	
 	<div id="plot-3d"></div>
 	<div id="plot-groundtracks"></div>
