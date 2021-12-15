@@ -41,6 +41,35 @@
 	left    : 815px;
 }
 
+.dropbtn {
+	background-color: black;
+	color: white;
+}
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+.dropdown {
+  position: absolute;
+  top     : 65px;
+  left    : 800px;
+  display : inline-block;
+}
+.dropdown-content {
+  display          : none;
+  position         : absolute;
+  background-color : black;
+  min-width        : 160px;
+  box-shadow       : 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index          : 1;
+}
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.show {display:block;}
+
 h1 {
 	color     : magenta;
 	text-align: center;

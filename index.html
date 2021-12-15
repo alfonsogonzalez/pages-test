@@ -8,6 +8,7 @@
 	<script src="orbit_tools.js"></script>
 	<script src="ode_tools.js"></script>
 	<script src="plotting_tools.js"></script>
+	<script src="planetary_data.js"></script>
 
 	<title>Astrodynamics Interactive Demo</title>
 	<link rel="icon" href="https://raw.githubusercontent.com/alfonsogonzalez/AWP/main/docs/cosmo-3d-launches.png" type="image/x-icon">
@@ -15,6 +16,15 @@
 </head>
 <body style="background-color:rgb(0,0,0);">
 	<h1>Astrodynamics Interactive Demo</h1>
+
+	<div class="dropdown">
+	  <button onclick="open_dropdown()" class="dropbtn">Central Body</button>
+	  <div id="dropdown" class="dropdown-content">
+	    <a href="#" onclick="set_central_body_earth()">Earth</a>
+	    <a href="#" onclick="set_central_body_moon()">Moon</a>
+	    <a href="#" onclick="set_central_body_mars()">Mars</a>
+	  </div>
+	</div>
 
 	<div class="element-input">
 		<label id="rx0l" for="rx0">r<sub>x</sub></label><br />

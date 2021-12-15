@@ -9,7 +9,68 @@ animate_button.addEventListener( "click", create_animated_plots );
 const N_STATE_VECTOR_INPUTS  = 2;
 const N_COES_INPUTS          = 2;
 const N_TOTAL_ORBITS         = N_STATE_VECTOR_INPUTS + N_COES_INPUTS;
-const HYPERBOLIC_TSPAN       = 85000;
+const HYPERBOLIC_TSPAN       = 35000;
+
+var CB = EARTH;
+set_defaults();
+
+function open_dropdown() {
+	document.getElementById( 'dropdown' ).classList.toggle( 'show' );
+}
+
+window.onclick = function( event ) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+function set_central_body_earth() {
+	CB = EARTH;
+	set_defaults();
+	create_stationary_plots();
+}
+
+function set_central_body_mars() {
+	CB = MARS;
+	set_defaults();
+	create_stationary_plots();
+}
+
+function set_central_body_moon() {
+	CB = MOON;
+	set_defaults();
+	create_stationary_plots();
+}
+
+function set_defaults() {
+	for( var n = 0; n < N_STATE_VECTOR_INPUTS; n++ ) {
+		document.getElementById( "rx" + n ).value = CB[ 'defaults' ][ 'rx' + n ];
+		document.getElementById( "ry" + n ).value = CB[ 'defaults' ][ 'ry' + n ];
+		document.getElementById( "rz" + n ).value = CB[ 'defaults' ][ 'rz' + n ];
+		document.getElementById( "vx" + n ).value = CB[ 'defaults' ][ 'vx' + n ];
+		document.getElementById( "vy" + n ).value = CB[ 'defaults' ][ 'vy' + n ];
+		document.getElementById( "vz" + n ).value = CB[ 'defaults' ][ 'vz' + n ];
+		document.getElementById( "dt" + n ).value = CB[ 'defaults' ][ 'dt' + n ];
+		document.getElementById( "sim-time" + n ).value = CB[ 'defaults' ][ 'sim-time' + n ];
+	}
+	for( var n = 0; n < N_COES_INPUTS; n++ ) {
+		document.getElementById( "sma"  + n ).value = CB[ 'defaults' ][ 'sma'  + n ];
+		document.getElementById( "ecc"  + n ).value = CB[ 'defaults' ][ 'ecc'  + n ];
+		document.getElementById( "inc"  + n ).value = CB[ 'defaults' ][ 'inc'  + n ];
+		document.getElementById( "ta"   + n ).value = CB[ 'defaults' ][ 'ta'   + n ];
+		document.getElementById( "aop"  + n ).value = CB[ 'defaults' ][ 'aop'  + n ];
+		document.getElementById( "raan" + n ).value = CB[ 'defaults' ][ 'raan' + n ];
+		document.getElementById( "dt-k" + n ).value = CB[ 'defaults' ][ 'dt-k' + n ];
+		document.getElementById( "sim-time-k" + n ).value = CB[ 'defaults' ][ 'sim-time-k' + n ];
+	}
+}
 
 function propagate_orbits() {
 	let states_list  = [];
@@ -37,11 +98,11 @@ function propagate_orbits() {
 				}
 				else { tspan = simtime; }
 			}
-			states  = propagate_orbit( state, tspan, dt, MU )
+			states  = propagate_orbit( state, tspan, dt )
 			ets     = linspace( 0, tspan, states.length );
 			latlons = cart2lat( states.map(
 				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
-				'J2000', 'IAU_EARTH', ets );
+				'J2000', CB[ 'frame' ], ets );
 
 			states_list.push( states );
 			latlons_list.push( latlons );
@@ -63,11 +124,11 @@ function propagate_orbits() {
 			state = coes2state( [ sma, ecc, inc * d2r, ta * d2r, aop * d2r, raan * d2r ] );
 			tspan = state2period( state.valueOf() ) *
 				parseFloat( document.getElementById( "sim-time-k" + n ).value );
-			states  = propagate_orbit( state, tspan, dt, MU )
+			states  = propagate_orbit( state, tspan, dt )
 			ets     = linspace( 0, tspan, states.length );
 			latlons = cart2lat( states.map(
 				function( a ){ return [ a[ 0 ], a[ 1 ], a[ 2 ] ] } ),
-				'J2000', 'IAU_EARTH', ets );
+				'J2000', CB[ 'frame' ], ets );
 
 			states_list.push( states );
 			latlons_list.push( latlons );
@@ -169,7 +230,7 @@ function create_animated_plots() {
 		if( step >= states_list[ 1 ].length ) {
 			clearInterval( interval_id );
 		}
-	}, 3 );
+	}, 6 );
 }
 
 create_stationary_plots();

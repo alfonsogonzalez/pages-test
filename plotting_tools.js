@@ -49,7 +49,7 @@ function make_sphere( radius ) {
 	const dataitem = {
 	    x: xx, y: yy, z: zz,
 	    opacity: 0.5,
-	    color  : 'blue',
+	    color  : CB[ 'color' ],
 	    type   : 'mesh3d',
 	}
 	var data = [
@@ -128,8 +128,8 @@ function create_3d_plot( states_list, idxs, lims = false ) {
 	if ( lims ) { max_val = lims; }
 	else { max_val *= MAX_VAL_SCALE; }
 
-	sphere_data   = make_sphere( 6378.0 );
-	basis_vectors = make_basis_vectors( 6378.0 );
+	sphere_data   = make_sphere( CB[ 'radius' ] );
+	basis_vectors = make_basis_vectors( CB[ 'radius' ] );
 	traces.push( sphere_data[ 0 ] );
 	traces.push( sphere_data[ 1 ] );
 	traces.push( basis_vectors[ 0 ] );
@@ -179,7 +179,7 @@ function create_groundtracks_plot( latlons_list, idxs ) {
 		plot_bgcolor : 'black',
 		paper_bgcolor: '#0000',
 		images       : [ {
-			source: 'https://raw.githubusercontent.com/alfonsogonzalez/pages-test/minimum-functionality/images/earth-surface-1024-512.jpeg',
+			source: CB[ 'img' ],
 			xref  : 'x', yref: 'y',
 			x     : -180, y: 90,
 			sizex : 360, sizey: 180,
@@ -211,7 +211,7 @@ function create_rv_plot( ets_list, states_list, idxs, xlim = false, ylims = fals
 		vmax  = Math.max( vmax, Math.max.apply( Math, traces[ 0 ][ 'y' ] ) );
 	}
 	if ( xlim  ) { xmax = xlim; }
-	if ( ylims ) { console.log( 'hello' ); rmax = ylims[ 0 ]; vmax = ylims[ 1 ]; }
+	if ( ylims ) { rmax = ylims[ 0 ]; vmax = ylims[ 1 ]; }
 
 	var layout_rv = {
 		title        : false,
@@ -227,7 +227,7 @@ function create_rv_plot( ets_list, states_list, idxs, xlim = false, ylims = fals
 		xaxis2: { showgrid: true, gridcolor: 'white',
 				  range: [ 0, xmax ], autorange: false },
 		yaxis1: { title: "Position (km)", showgrid: true, gridcolor: 'white',
-				  range: [ 6378.0, rmax ], autorange: false },
+				  range: [ CB[ 'radius' ], rmax ], autorange: false },
 		yaxis2: { title: "Velocity (km/s)", showgrid: true, gridcolor: 'white',
 				  range: [ 0, vmax ], autorange: false }
 	};

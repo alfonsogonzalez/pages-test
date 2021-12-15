@@ -6,7 +6,9 @@ d2r = Math.PI / 180.0;
 r2d = 180.0 / Math.PI;
 
 REFERENCE_FRAME_MAP = {
-	'IAU_EARTH': eci2ecef
+	'IAU_EARTH': eci2ecef,
+	'IAU_MOON' : mci2mcmf,
+	'IAU_MARS' : maci2macmaf
 }
 
 function add( v0, v1 ) {
@@ -91,7 +93,15 @@ function frame_transform( arrs, from, to, ets ) {
 }
 
 function eci2ecef( et ) {
-	return Cz( OMEGA_EARTH * et );
+	return Cz( EARTH[ 'omega' ] * et );
+}
+
+function mci2mcmf( et ) {
+	return Cz( MOON[ 'omega' ] * et );
+}
+
+function maci2macmaf( et ) {
+	return Cz( MARS[ 'omega' ] * et );
 }
 
 function reclat( r ) {

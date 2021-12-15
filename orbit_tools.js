@@ -1,16 +1,13 @@
 
-const MU          = 3.9860043543609598E+05;
-const OMEGA_EARTH = Math.PI / ( 12 * 3600 );
+
 
 function two_body_ode( t, y ) {
 	r = y.slice( 0, 3 );
-	a = scale( r, -MU / Math.pow( norm( r ), 3 ) );
+	a = scale( r, -CB[ 'mu' ] / Math.pow( norm( r ), 3 ) );
 	return [ y[ 3 ], y[ 4 ], y[ 5 ], a[ 0 ], a[ 1 ], a[ 2 ] ];
 }
 
-function propagate_orbit( state, tspan, dt, mu ) {
-	console.log( state );
-	console.log( tspan );
+function propagate_orbit( state, tspan, dt ) {
 	n_steps     = Math.ceil( tspan / dt ) + 1;
 	states      = Array( n_steps ).fill( Array( 6 ) );
 	states[ 0 ] = state;
@@ -23,9 +20,9 @@ function propagate_orbit( state, tspan, dt, mu ) {
 
 function state2period( state ) {
 	eps = Math.pow( norm( state.slice( 3, 6 ) ), 2 ) /
-			2.0 - MU / norm( state.slice( 0, 3 ) );
-	sma = -MU / ( 2.0 * eps );
-	return 2 * Math.PI * Math.sqrt( Math.pow( sma, 3 ) / MU );
+			2.0 - CB[ 'mu' ] / norm( state.slice( 0, 3 ) );
+	sma = -CB[ 'mu' ] / ( 2.0 * eps );
+	return 2 * Math.PI * Math.sqrt( Math.pow( sma, 3 ) / CB[ 'mu' ] );
 }
 
 function perif2eci( raan, aop, inc ) {
@@ -47,7 +44,7 @@ function coes2state( coes ) {
 	r_norm  = p / ( 1 + ecc * cta );
 	r_perif = math.multiply( math.matrix( [ cta, sta, 0 ] ), r_norm );
 	v_perif = math.multiply( math.matrix( [ -sta, ecc + cta, 0 ] ),
-					 Math.sqrt( MU / p ) );
+					 Math.sqrt( CB[ 'mu' ] / p ) );
 	matrix  = perif2eci( raan, aop, inc );
 	r_ECI   = math.multiply( matrix, r_perif );
 	v_ECI   = math.multiply( matrix, v_perif );
