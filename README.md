@@ -1,5 +1,5 @@
 # AID - Astrodynamics Interactive Demo
-![intro-image](images/intro-image.png)
+![intro-image](images/intro-image.PNG)
 
 `AID` is a zero dependency tool on the browser (deployed via GitHub Pages) created to easily experiment with the relationship between initial orbital conditions (by state vector or keplerian orbital elements), 3D orbits, groundtracks, and position / velocity magnitude vs. time.
 
@@ -25,7 +25,7 @@ After any changes are made, click the `Propagate Orbits!` button to update the p
 For bounded orbits (circular and elliptical), the tool calculates the orbital period of given the initial conditions of the orbit, so the user only needs to input how many periods they would like the solver to propagate.
 
 For unbounded orbits (parabolic and hyperbolic) the period is undefined, therefore the tool propagates for a pre-defined amount of time. However, the user can override that by inputting the number of seconds the solver should propagate in the Periods entry. Here is the logic:
-![Periods Entry Logic](images/periods-entry-logic.png)
+![Periods Entry Logic](images/periods-entry-logic.PNG)
 
 The state2period function will return `NaN` (Not a Number) for hyperbolic orbits, since the function takes a square root of a negative number (the semi-major axis is defined as negative for unbounded orbits). If that happens, the tool checks the `Periods` entry. If the value in the `Periods` entry is greater than 50, then the tool will use that value. Else, the tool uses the pre-defined length of time `HYPERBOLIC_TSPAN`
 
