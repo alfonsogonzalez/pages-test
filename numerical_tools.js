@@ -93,15 +93,15 @@ function frame_transform( arrs, from, to, ets ) {
 }
 
 function eci2ecef( et ) {
-	return Cz( EARTH[ 'omega' ] * et );
+	return Cz( -EARTH[ 'omega' ] * et );
 }
 
 function mci2mcmf( et ) {
-	return Cz( MOON[ 'omega' ] * et );
+	return Cz( -MOON[ 'omega' ] * et );
 }
 
 function maci2macmaf( et ) {
-	return Cz( MARS[ 'omega' ] * et );
+	return Cz( -MARS[ 'omega' ] * et );
 }
 
 function reclat( r ) {
