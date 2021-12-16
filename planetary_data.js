@@ -5,15 +5,15 @@
 const EARTH = {
 	'mu'      : 3.9860043543609598E+05,
 	'radius'  : 6378.0,
-	'omega'   : Math.PI / ( 12 * 3600 ),
+	'omega'   : 2 * Math.PI / ( 23 * 3600 + 56 * 60.0 + 4.0 ),
 	'frame'   : 'IAU_EARTH',
 	'img'     : 'https://raw.githubusercontent.com/alfonsogonzalez/pages-test/minimum-functionality/images/earth-surface-1024-512.jpeg',
 	'color'   : 'blue',
 	'defaults': {
 		'rx0': 6878.0, 'ry0': 0, 'rz0': 0, 'vx0': 0,   'vy0': 7.62, 'vz0': 0,   'dt0': 60, 'sim-time0': 2,
 		'rx1': 6878.0, 'ry1': 0, 'rz1': 0, 'vx1': 1.1, 'vy1': 1.5,  'vz1': 8.0, 'dt1': 60, 'sim-time1': 2,
-		'sma0': 8500.0,  'ecc0': 0.2,  'inc0': 60.0, 'ta0': 0.0, 'aop0': 50.0, 'raan0': 40.0, 'dt-k0': 60,  'sim-time-k0': 2,
-		'sma1': 25500.0, 'ecc1': 0.01, 'inc1': 1.0,  'ta1': 0.0, 'aop1': 50.0, 'raan1': 40.0, 'dt-k1': 360, 'sim-time-k1': 1
+		'sma0': 8500.0,  'ecc0': 0.2, 'inc0': 60.0, 'ta0': 0.0, 'aop0': 50.0, 'raan0': 40.0,   'dt-k0': 60,  'sim-time-k0': 2,
+		'sma1': 42164.0, 'ecc1': 0.0, 'inc1': 0.0,  'ta1': 0.0, 'aop1': 0.0,  'raan1': -100.0, 'dt-k1': 180, 'sim-time-k1': 1
 	}
 };
 
@@ -40,9 +40,9 @@ const MARS = {
 	'img'     : 'https://raw.githubusercontent.com/alfonsogonzalez/pages-test/minimum-functionality/images/mars-surface-1024-512.jpeg',
 	'color'   : 'red',
 	'defaults': {
-		'rx0': 3889.5, 'ry0': 0, 'rz0': 0, 'vx0': 0,   'vy0': 3.45, 'vz0': 0,   'dt0': 60, 'sim-time0': 2,
-		'rx1': 4000.0, 'ry1': 0, 'rz1': 0, 'vx1': 0.1, 'vy1': 0.7,  'vz1': 3.5, 'dt1': 60, 'sim-time1': 2,
-		'sma0': 11500.0, 'ecc0': 0.7,  'inc0': 110.0, 'ta0': 0.0, 'aop0': 50.0, 'raan0': 40.0, 'dt-k0': 60,  'sim-time-k0': 1,
-		'sma1': 25500.0, 'ecc1': 0.01, 'inc1': 1.0,   'ta1': 0.0, 'aop1': 50.0, 'raan1': 40.0, 'dt-k1': 360, 'sim-time-k1': 1
+		'rx0': 3889.5, 'ry0': 0,      'rz0': 0,       'vx0': 0,   'vy0': 3.45, 'vz0': 0,     'dt0': 60, 'sim-time0': 4,
+		'rx1': 179.0,  'ry1': 3186.0, 'rz1': -1765.0, 'vx1': 0.3, 'vy1': -1.7, 'vz1': -2.98, 'dt1': 60, 'sim-time1': 4,
+		'sma0': 12000.0, 'ecc0': 0.7, 'inc0': 60.0, 'ta0': 0.0, 'aop0': 0.0,  'raan0': 0.0,  'dt-k0': 60, 'sim-time-k0': 2,
+		'sma1': 4000.0,  'ecc1': 0.1, 'inc1': 30.0, 'ta1': 0.0, 'aop1': 50.0, 'raan1': 40.0, 'dt-k1': 60, 'sim-time-k1': 4
 	}
 };
